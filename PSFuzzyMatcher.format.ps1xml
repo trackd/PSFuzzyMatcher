@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>FuzzyResults</Name>
+            <ViewSelectedBy>
+                <TypeName>FuzzyResults</TypeName>
+            </ViewSelectedBy>
+            <GroupBy>
+                <PropertyName>FuzzyThreshold</PropertyName>
+                <CustomControl>
+                    <CustomEntries>
+                        <CustomEntry>
+                            <CustomItem>
+                                <Frame>
+                                    <FirstLineIndent>4</FirstLineIndent>
+                                    <CustomItem>
+                                        <ExpressionBinding>
+                                            <ScriptBlock>
+                                                # DamerauLevenshtein Minimum Distance
+                                                '{0}{1}{2}{3}{4}{2}' -f (
+                                                    "$([char]27)[36;1m",
+                                                    "Fuzzy Evaluation Threshold: ",
+                                                    "$([char]27)[0m",
+                                                    "$([char]27)[33;1m",
+                                                    $_.FuzzyThreshold
+                                                )
+                                            </ScriptBlock>
+                                        </ExpressionBinding>
+                                    </CustomItem>
+                                </Frame>
+                            </CustomItem>
+                        </CustomEntry>
+                    </CustomEntries>
+                </CustomControl>
+            </GroupBy>
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <Label>Distance</Label>
+                        <Alignment>Center</Alignment>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>IsMatch</Label>
+                        <Alignment>Center</Alignment>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Candidate</Label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Pattern</Label>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <ScriptBlock>
+                                    # Distance
+                                    $_.Distance
+                                </ScriptBlock>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+                                    # IsMatch
+                                    if ($_.IsMatch) {
+                                        '{1}{0}{2}' -f (
+                                            [char]0xf42e,
+                                            "$([char]27)[42m",
+                                            "$([char]27)[0m")
+                                    }
+                                    else {
+                                        '{1}{0}{2}' -f (
+                                            [char]0xEA87,
+                                            "$([char]27)[41m",
+                                            "$([char]27)[0m")
+                                    }
+                                </ScriptBlock>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+                                    # Candidate
+                                    if ($_.Candidate.length -gt 45) {
+                                        $_.Candidate.Substring(0, 45) + '...'
+                                    } else {
+                                        $_.Candidate
+                                    }
+                                </ScriptBlock>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+                                    # Pattern
+                                    if ($_.Pattern.length -gt 45) {
+                                        $_.Pattern.Substring(0, 45) + '...'
+                                    } else {
+                                        $_.Pattern
+                                    }
+                                </ScriptBlock>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>
